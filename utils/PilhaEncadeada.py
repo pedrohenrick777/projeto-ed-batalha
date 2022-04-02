@@ -102,7 +102,7 @@ class Pilha:
 
  
 
-# Programa para testar
+""" # Programa para testar
 if __name__ == '__main__':
     p = Pilha()
     p.empilha(10)
@@ -116,5 +116,5 @@ if __name__ == '__main__':
     while( not p.estaVazia()):
         print(p.desempilha())
         p.imprime()
-    
+     """
 
