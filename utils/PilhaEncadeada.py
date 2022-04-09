@@ -83,6 +83,9 @@ class Pilha:
 
     def imprime(self):
         print(self.__str__())
+
+    def topo(self):
+        return self.__head
         
     def __str__(self):
         cursor = self.__head
