@@ -1,9 +1,8 @@
 import os
-from itertools import count
-from time import sleep
-
 from Baralho import Baralho
 from Jogador import *
+from itertools import count
+from time import sleep
 from utils.CompararCartas import *
 from utils.PilhaEncadeada import PilhaException
 
@@ -14,38 +13,100 @@ def limpar_tela():
     else:
         os.system('clear')
 
+
+def receber_cartas(jogador_1, jogador_2, baralho):
+    for n in count():
+        try:
+            if n % 2 == 0:
+                jogador_1.receberCartas(baralho.retirarCarta())
+            else:
+                jogador_2.receberCartas(baralho.retirarCarta())
+        except PilhaException:
+            break
+
+
 def main():
+    rodada=0
     while True:
-        limpar_tela()
         try:
             nome_jogador_1 = input('Nome do Jogador 1: ').strip()
             nome_jogador_2 = input('Nome do Jogador 2: ').strip()
             if not nome_jogador_1 or not nome_jogador_2:
                 raise NomeJogadorException('Digite o nome dos jogadores!')
+            else:
+                break
         except NomeJogadorException as e:
             print(e, 'Enter para continuar')
             input('')
             continue
+    jogador_1 = Jogador(nome_jogador_1)
+    jogador_2 = Jogador(nome_jogador_2)
+    print(f'Olá {jogador_1.nome} e {jogador_2.nome}!!!')
+    print(f'Vamos começar embaralhando as cartas...')
+    baralho = Baralho()
 
-        jogador_1 = Jogador(nome_jogador_1)
-        jogador_2 = Jogador(nome_jogador_2)
-        print(f'Olá {str(jogador_1.nome)} e {jogador_2.nome}!!!')
-        print(f'Vamos começar embaralhando as cartas...')
-        baralho = Baralho()
-        for n in count():
-            try:
-                if n % 2 == 0:
-                    jogador_1.receberCartas(baralho.retirarCarta())
-                else:
-                    jogador_2.receberCartas(baralho.retirarCarta())
-            except PilhaException:
-                break
-        sleep(4)
+    while True:
+        acumulado = []
+        rodada +=1
+        limpar_tela()
+        receber_cartas(jogador_1=jogador_1, jogador_2=jogador_2, baralho=baralho)
+        sleep(1)
         carta_j1 = jogador_1.retiraCarta()
         carta_j2 = jogador_2.retiraCarta()
-        print(f'\n{carta_j1} x {carta_j2}')
-        print(comparar_cartas(carta_j1, carta_j2))
-        input()
+        print(f'\nA carta do jogador 1 {jogador_1.nome} é:\n{carta_j1}\nA carta do jogador 2 {jogador_2.nome} é: {carta_j2}')
+
+        while verificarEmpate(carta_j1.valor, carta_j2.valor):
+            resultado, acumulado, jogadas1, jogadas2 = comparar_cartas(carta_j1, carta_j2, acumulado)
+            print(resultado)
+            if jogador_2.cartas.estaVazia():
+                if len(jogador_2.cartas_ganhas) != 0:
+                    for carta in jogador_2.cartas_ganhas:
+                        jogador_2.cartas.empilha(carta)
+                        jogador_2.cartas_ganhas.pop()
+                else:
+                    print('Acabou o jogo! Jogador 1 ganhou e jogador 2 não possui mais cartas depois desse empate.')
+                    break
+            if jogador_1.cartas.estaVazia():
+                if len(jogador_1.cartas_ganhas) != 0:
+                    for carta in jogador_1.cartas_ganhas:
+                        jogador_1.cartas.empilha(carta)
+                        jogador_1.cartas_ganhas.pop()
+                else:
+                    print('Acabou o jogo! Jogador 2 ganhou e jogador 1 não possui mais cartas depois desse empate.')
+                break
+            carta_j1 = jogador_1.retiraCarta()
+            carta_j2 = jogador_2.retiraCarta()
+
+        resultado, acumulado, jogadas1, jogadas2 = comparar_cartas(carta_j1, carta_j2, acumulado)
+
+        if jogadas1 == "perdeu":
+            for lista in jogadas2:
+                jogador_2.pegarCartaOponente(lista)
+            print(f'O jogador 1 {jogador_1.nome} perdeu a rodada {rodada}')
+        if jogadas2 == "perdeu":
+            for lista in jogadas1:
+                jogador_1.pegarCartaOponente(lista)
+            print(f'O jogador 2 {jogador_1.nome} perdeu a rodada {rodada}')
+        print(f'O jogador 1 possui {jogador_1.quantificarCartas()} cartas!\nO jogador 2 possui {jogador_2.quantificarCartas()} cartas!')
+        if jogador_1.cartas.estaVazia():
+            if len(jogador_1.cartas_ganhas) != 0:
+                for carta in jogador_1.cartas_ganhas:
+                    jogador_1.cartas.empilha(carta)
+                    jogador_1.cartas_ganhas.pop()
+            else:
+                print('O jogador 2 venceu o jogo')
+                break
+        if jogador_2.cartas.estaVazia():
+            if len(jogador_2.cartas_ganhas) != 0:
+                for carta in jogador_2.cartas_ganhas:
+                    jogador_2.cartas.empilha(carta)
+                    jogador_2.cartas_ganhas.pop()
+            else:
+                print('O jogador 2 venceu o jogo')
+                break
+        else:
+            print("\n##########################\nVamos para mais uma rodada!\n##########################")
+
 
 if __name__ == '__main__':
     main()

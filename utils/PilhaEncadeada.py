@@ -8,6 +8,7 @@ class Node:
         self.dado = dado
         self.prox = None
 
+
     def insereProximo(self, dado):
         if (self.prox == None):
             self.prox = Node(dado)
@@ -72,7 +73,6 @@ class Pilha:
         self.__head = novo
         self.__tamanho += 1
 
-
     def desempilha(self):
         if not self.estaVazia():
             dado = self.__head.dado
@@ -80,7 +80,6 @@ class Pilha:
             self.__tamanho -= 1
             return dado
         raise PilhaException('A pilha está vazia')
-   
 
     def imprime(self):
         print(self.__str__())
@@ -102,19 +101,19 @@ class Pilha:
 
  
 
-""" # Programa para testar
-if __name__ == '__main__':
-    p = Pilha()
-    p.empilha(10)
-    p.empilha(20)
-    p.empilha(30)
-    p.empilha(40)
-    print('Tamanho:',p.tamanho())
-    print(p)
+ # Programa para testar
+# if __name__ == '__main__':
+#     p = Pilha()
+#     p.empilha(10)
+#     p.empilha(20)
+#     p.empilha(30)
+#     p.empilha(40)
+#     print('Tamanho:',p.tamanho())
+#     print(p)
+#
+#     #esvaziando
+#     while( not p.estaVazia()):
+#         print(p.desempilha())
+#         p.imprime()
 
-    #esvaziando
-    while( not p.estaVazia()):
-        print(p.desempilha())
-        p.imprime()
-     """
 
