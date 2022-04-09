@@ -86,7 +86,7 @@ def main():
         if jogadas2 == "perdeu":
             for lista in jogadas1:
                 jogador_1.pegarCartaOponente(lista)
-            print(f'O jogador 2 {jogador_1.nome} perdeu a rodada {rodada}')
+            print(f'O jogador 2 {jogador_2.nome} perdeu a rodada {rodada}')
         print(f'O jogador 1 possui {jogador_1.quantificarCartas()} cartas!\nO jogador 2 possui {jogador_2.quantificarCartas()} cartas!')
         if jogador_1.cartas.estaVazia():
             if len(jogador_1.cartas_ganhas) != 0:
