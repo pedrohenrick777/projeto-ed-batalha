@@ -53,16 +53,17 @@ def main():
             rodada +=1
             limpar_tela()
             receber_cartas(jogador_1=jogador_1, jogador_2=jogador_2, baralho=baralho)
-            sleep(1)
+            sleep(2)
             carta_j1 = jogador_1.retiraCarta()
             carta_j2 = jogador_2.retiraCarta()
-            print(f'\nA carta do {jogador_1.nome} é:\n{carta_j1}\nA carta do {jogador_2.nome} é: \n{carta_j2}')
+            print(f'\n~~~~~~~ RODADA {rodada} ~~~~~~~')
+            print(f'\nA carta de {jogador_1.nome} é: {carta_j1}\nA carta de {jogador_2.nome} é: {carta_j2}')
 
             while verificarEmpate(carta_j1.valor, carta_j2.valor):
                 resultado, acumulado, jogadas1, jogadas2 = comparar_cartas(carta_j1, carta_j2, acumulado)
                 print(resultado)
-                print(f'As cartas acumuladas são: {acumulado}')
-                input()
+                print(f'As cartas acumuladas são: {acumulado}\nVamos continuar na mesma rodada, pegando novas cartas. Quem ganhar, leva todas!')
+                input("Aperte ENTER para continuar")
                 if jogador_2.cartas.estaVazia():
                     if len(jogador_2.cartas_ganhas) != 0:
                         for carta in jogador_2.cartas_ganhas:
@@ -81,6 +82,7 @@ def main():
                     break
                 carta_j1 = jogador_1.retiraCarta()
                 carta_j2 = jogador_2.retiraCarta()
+                print(f'\nA carta de {jogador_1.nome} é: {carta_j1}\nA carta de {jogador_2.nome} é: {carta_j2}')
 
             resultado, acumulado, jogadas1, jogadas2 = comparar_cartas(carta_j1, carta_j2, acumulado)
 
@@ -92,7 +94,7 @@ def main():
                 for lista in jogadas1:
                     jogador_1.pegarCartaOponente(lista)
                 print(f'{jogador_2.nome} perdeu a rodada {rodada}')
-            print(f'O {jogador_1.nome} possui {jogador_1.quantificarCartas()} cartas!\nO jogador 2 possui {jogador_2.quantificarCartas()} cartas!')
+            print(f'{jogador_1.nome} possui {jogador_1.quantificarCartas()} cartas e {jogador_2.nome} possui {jogador_2.quantificarCartas()} cartas!')
             if jogador_1.cartas.estaVazia():
                 if len(jogador_1.cartas_ganhas) != 0:
                     for carta in jogador_1.cartas_ganhas:
@@ -113,11 +115,13 @@ def main():
                 if rodada >= rodada_fim:
                     if jogador_1.quantificarCartas() > jogador_2.quantificarCartas():
                         print(f'{jogador_1.nome} é o ganhador!')
+                        sleep(2)
                         novo_jogo = input('Deseja jogar novamente? [S/N]').strip()[0]
                         if novo_jogo.upper() == 'N':
+                            print('Até a próxima!')
                             exit()
                         else:
-                            confirma_troca_nome = input('Trocar nome? [S/N]').strip()[0].upper()
+                            confirma_troca_nome = input('Trocar nomes? [S/N]').strip()[0].upper()
                             if confirma_troca_nome == 'S':
                                 trocar_nome = True
                             else:
@@ -125,19 +129,22 @@ def main():
                             break
                     elif jogador_1.quantificarCartas() < jogador_2.quantificarCartas():
                         print(f'{jogador_2.nome} é o ganhador!')
+                        sleep(2)
                         novo_jogo = input('Deseja jogar novamente? [S/N]').strip()[0]
                         if novo_jogo.upper() == 'N':
+                            print('Até a próxima!')
                             exit()
                         else:
-                            confirma_troca_nome = input('Trocar nome? [S/N]').strip()[0].upper()
+                            confirma_troca_nome = input('Trocar nomes? [S/N]').strip()[0].upper()
                             if confirma_troca_nome == 'S':
                                 trocar_nome = True
                             else:
                                 trocar_nome=False
                             break
-
+                    else:
+                        print('Empate na quantidade de cartas dos jogadores.\n\nAgora é a decisiva!!!')
                 print("\n##########################\nVamos para mais uma rodada!\n##########################")
-                input()
+                input("Aperte ENTER para continuar")
 
 
 if __name__ == '__main__':
