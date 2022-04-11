@@ -1,3 +1,6 @@
+from utils.PilhaEncadeada import Pilha
+
+
 class NomeJogadorException(Exception):
     def __init__(self, mensagem, metodo=''):
         super().__init__(mensagem)
@@ -6,24 +9,28 @@ class NomeJogadorException(Exception):
 class Jogador:
     def __init__(self, nome):
         self.__nome = nome
-        self.__cartas = []
-        self.__cartas_retiradas = []
+        self.__cartas = Pilha()
+        self.__cartas_acumuladas = []
 
-    def devolverCarta(self, cartas_a_devolver:list):
-        for carta in cartas_a_devolver:
-            self.__cartas.insert(0, carta)
+    def pegarCartaOponente(self, carta):
+        self.cartas_acumuladas.insert(0, carta)
 
     def retiraCarta(self):
-        carta = self.__cartas.pop()
+        carta = self.__cartas.desempilha()
         return carta
 
     def receberCartas(self, carta):
-        self.__cartas.append(carta)
+        self.__cartas.empilha(carta)
+
+    def quantificarCartas(self):
+        return self.__cartas.tamanho() + len(self.__cartas_acumuladas)
+
+    def temCartasAcumuladas(self):
+        return self.__cartas_acumuladas is None
 
     @property
-    def cartas_retiradas(self):
-        return self.__cartas_retiradas
-
+    def cartas_acumuladas(self):
+        return self.__cartas_acumuladas
     @property
     def cartas(self):
         return self.__cartas 
@@ -32,6 +39,7 @@ class Jogador:
     def nome(self):
         return self.__nome
 
+    @property
     def numeroCartas(self):
         return len(self.__cartas)
     
