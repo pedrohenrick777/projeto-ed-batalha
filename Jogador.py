@@ -13,7 +13,7 @@ class Jogador:
         self.__cartas_acumuladas = []
 
     def pegarCartaOponente(self, carta):
-        self.cartas_ganhas.insert(0, carta)
+        self.cartas_acumuladas.insert(0, carta)
 
     def retiraCarta(self):
         carta = self.__cartas.desempilha()
@@ -29,7 +29,7 @@ class Jogador:
         return self.__cartas_acumuladas is None
 
     @property
-    def cartas_ganhas(self):
+    def cartas_acumuladas(self):
         return self.__cartas_acumuladas
     @property
     def cartas(self):
