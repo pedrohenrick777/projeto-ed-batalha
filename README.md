@@ -16,9 +16,13 @@ Para fins de correção, a equipe deve exibir uma interface que apresente o pass
 
 A implementação desta atividade de avaliação deve levar em conta o atendimento aos seguintes requisitos funcionais:
 
+
 ●	Iniciar o jogo definindo os jogadores e sua mão de cartas.  As cartas devem estar embaralhadas antes da distribuição. [10 pontos]
+
 ●	Simulação: acompanhamento da saída de cada batalha. A clareza de informações exibidas na tela é importante para a avaliação. Sugestão: informar o número de ordem da batalha, quem ganhou e o total de cartas atualizada de cada jogador, considerando já as cartas que recebeu do adversário. [30 pontos]
+
 ●	No caso de empate, mostrar na tela as jogadas subsequentes e a retenção das cartas até que haja um vencedor. [20 pontos]
+
 ●	Permitir que ao término do jogo, o usuário decida se quer jogar novamente ou encerrar o programa. Se for jogar novamente [20 pontos]
 
 
@@ -26,15 +30,25 @@ A implementação desta atividade de avaliação deve levar em conta o atendimen
 
 A implementação deste projeto deve levar em conta o atendimento aos seguintes requisitos não-funcionais:
 
+
 ●	Modelar a classe Jogador para o problema em questão, utilizando os princípios OO. [20 pontos]
+
 ●	Utilizar exclusivamente o código do baralho disponibilizado para esta atividade. Ao Baralho, substitua a coleção de cartas por uma pilha também disponibilizada junto com esta atividade. Só será usado 1 Baralho. Não serão corrigidas soluções que não apliquem a Pilha.
+
 ●	Modularização;
+
 ●	Encapsulamento;
+
 ●	Tratamento de exceções;
+
 ●	Documentação do código;
+
 ●	Facilidade de utilização do programa;
+
 ●	Interação programa/usuário na exibição das mensagens do sistema (de erro ou de orientação);
+
 ●	Apresentação de dados de forma organizada, na tela;
+
 
 O não atendimento a estes requisitos não-funcionais implicará em um redutor na nota.
 
