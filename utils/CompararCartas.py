@@ -1,4 +1,4 @@
-def comparar_cartas(carta_j1, carta_j2, acumulado):
+def compararCartas(carta_j1, carta_j2, acumulado):
 
     if carta_j1.valor == carta_j2.valor:
         resultado = 'As cartas estão empatadas'
