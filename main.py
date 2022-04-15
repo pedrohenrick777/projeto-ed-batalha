@@ -59,9 +59,12 @@ def main():
                 except AssertionError:
                     print('Digite um número maior que 0')
 
-                except KeyborarInterrupt:
+                except KeyboardInterrupt:
                     print('Leitura de dados interrompida pelo usuário')
 
+        except KeyboardInterrupt:
+            print('Leitura de dados interrompida pelo usuário')
+            
         except NomeJogadorException as e:
             print(e, 'Enter para continuar')
             input('')
@@ -149,7 +152,7 @@ def main():
                                 novo_jogo = input('Deseja jogar novamente? Valores Válidos: [S/N]').strip()[0]
                             except IndexError:
                                 print('ERRO: informe um valor válido [S/N]')
-                            except KeyborarInterrupt:
+                            except KeyboardInterrupt:
                                 print('Leitura de dados interrompida pelo usuário')
                         if novo_jogo.upper() == 'N':
                             print('Até a próxima!')
@@ -161,7 +164,7 @@ def main():
                                     confirma_troca_nome = input('Trocar nomes? [S/N]').strip()[0].upper()
                                 except IndexError:
                                     print('ERRO: informe um valor válido [S/N]')
-                                except KeyborarInterrupt:
+                                except KeyboardInterrupt:
                                     print('Leitura de dados interrompida pelo usuário')
                             if confirma_troca_nome == 'S':
                                 trocar_nome = True
@@ -176,7 +179,7 @@ def main():
                                 novo_jogo = input('Deseja jogar novamente? Valores Válidos: [S/N]').strip()[0]
                             except IndexError:
                                 print('ERRO: informe um valor válido [S/N]')
-                            except KeyborarInterrupt:
+                            except KeyboardInterrupt:
                                 print('Leitura de dados interrompida pelo usuário')
                         if novo_jogo.upper() == 'N':
                             print('Até a próxima!')
@@ -189,7 +192,7 @@ def main():
                                         0].upper()
                                 except IndexError:
                                     print('ERRO: informe um valor válido [S/N]')
-                                except KeyborarInterrupt:
+                                except KeyboardInterrupt:
                                     print('Leitura de dados interrompida pelo usuário')
                             if confirma_troca_nome == 'S':
                                 trocar_nome = True
