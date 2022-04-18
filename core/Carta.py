@@ -1,5 +1,5 @@
 class Carta:
-
+    '''Classe utilizada para gerar as cartas, guarda o valor, cor, número e naipe da respectiva carta'''
     def __init__(self, numero, naipe, cor, valor):
         self.__numero = numero
         self.__naipe = naipe

@@ -1,9 +1,11 @@
 class PilhaException(Exception):
+    '''Excessão utilizada caso a Pilha não tenha mais cartas'''
     def __init__(self,mensagem,metodo=''):
         super().__init__(mensagem)
         self.metodo = metodo
 
 class Node:
+    '''Utilizada juntamente com a Pilha para guardar a ordem das cartas.'''
     def __init__(self, dado):
         self.dado = dado
         self.prox = None
@@ -24,6 +26,7 @@ class Node:
 
 
 class Pilha:
+    '''Estrutura utilizada para guardar a ordem das cartas, seja no baralho inicial, seja nas cartas de cada jogador'''
     def __init__(self):
         self.__head = None
         self.__tamanho = 0
@@ -101,22 +104,3 @@ class Pilha:
 
         s += ']'
         return s
-
- 
-
- # Programa para testar
-# if __name__ == '__main__':
-#     p = Pilha()
-#     p.empilha(10)
-#     p.empilha(20)
-#     p.empilha(30)
-#     p.empilha(40)
-#     print('Tamanho:',p.tamanho())
-#     print(p)
-#
-#     #esvaziando
-#     while( not p.estaVazia()):
-#         print(p.desempilha())
-#         p.imprime()
-
-
