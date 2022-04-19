@@ -1,212 +1,123 @@
-import os
-from Baralho import Baralho
-from Jogador import *
-from itertools import count
-from time import sleep
-from utils.CompararCartas import *
-from utils.PilhaEncadeada import PilhaException
+from core.Baralho import *
+from core.Jogador import *
+from utils.JogoExceptions import *
+from utils.Tela import Tela
 
+if __name__ == '__main__':
+    trocar_nome = True  # variável utilizada para verificar a necessidade de trocar o nome dos jogadores. Se for true, novos nomes serão solicitados.
+    cartas_acumuladas = []  # lista para armazenar as cartas acumuladas pelos jogadores
 
-def limpar_tela():
-    if os.name == 'nt':
-        os.system('cls')
-    else:
-        os.system('clear')
-
-
-def receber_cartas(jogador_1, jogador_2, baralho):
-    for n in count():
-        try:
-            if n % 2 == 0:
-                jogador_1.receberCartas(baralho.retirarCarta())
-            else:
-                jogador_2.receberCartas(baralho.retirarCarta())
-        except PilhaException:
-            break
-
-
-def verificarOponenteCampeao(jogador):
-    if jogador.cartas.estaVazia():
-        if len(jogador.cartas_acumuladas) == 0:
-            return True
-        else:
-            return False
-
-
-def main():
-    trocar_nome = True
     while True:
-        rodada_fim = 0
-        novo_jogo = ''
-        confirma_troca_nome = ''
-
+        rodada = 1  # variável que representa as rodadas
         try:
+            Tela.limpar_tela()
             if trocar_nome:
-                nome_jogador_1 = input('Nome do Jogador 1: ').strip()
-                nome_jogador_2 = input('Nome do Jogador 2: ').strip()
-            if not nome_jogador_1 or not nome_jogador_2:
-                raise NomeJogadorException('Digite o nome dos 2 jogadores!')
-            while rodada_fim <= 0:
-
+                nome_j1 = input('Nome do Jogador 1: ')
+                nome_j2 = input('Nome do Jogador 2: ')
+            jogador_1 = Jogador(nome_j1)  # instanciando o Objeto Jogador para o primeiro jogador
+            jogador_2 = Jogador(nome_j2)  # instanciando o Objeto Jogador para o segundo jogador
+            while True:
                 try:
-                    rodada = 0
-                    rodada_fim = int(input('Digite a quantidade máxima de rodadas e pressione ENTER: '))
+                    Tela.limpar_tela()
+                    rodada_fim = int(input(
+                        'Digite a quantidade de rodadas (vazio para o jogo terminar quando um dos jogadores não tiver mais cartas): '))  # variável para pegar a quantidade de rodadas desejadas
                     assert rodada_fim > 0
-
-                except ValueError:
-                    print('Digite um número inteiro válido')
-
+                    break
                 except AssertionError:
-                    print('Digite um número maior que 0')
-
-                except KeyboardInterrupt:
-                    print('Leitura de dados interrompida pelo usuário')
+                    print('Digite um número maior que 0 ou deixe o campo vazio')
+                    continue
+                except ValueError:
+                    rodada_fim = None
+                    break
 
         except KeyboardInterrupt:
             print('Leitura de dados interrompida pelo usuário')
-            
-        except NomeJogadorException as e:
-            print(e, 'Enter para continuar')
-            input('')
+
+        except NomeJogadorException:
+            print('É preciso digitar o(s) nome(s) do(s) jogador(es). ENTER para continuar')
+            input()
             continue
 
-        jogador_1 = Jogador(nome_jogador_1)
-        jogador_2 = Jogador(nome_jogador_2)
-
-        print(f'Olá {jogador_1.nome} e {jogador_2.nome}!!!')
-        print(f'Vamos começar embaralhando as cartas...')
-
-        baralho = Baralho()
-
+        baralho = Baralho()  # instanciando o Objeto Baralho
+        cont = 0
         while True:
-            acumulado = []
-            rodada += 1
-            receber_cartas(jogador_1=jogador_1, jogador_2=jogador_2, baralho=baralho)
-            carta_j1 = jogador_1.retiraCarta()
-            carta_j2 = jogador_2.retiraCarta()
-            print(f'\n~~~~~~~ RODADA {rodada} ~~~~~~~')
-            print(f'\nA carta de {jogador_1.nome} é: {carta_j1}\nA carta de {jogador_2.nome} é: {carta_j2}')
-
-            while verificarEmpate(carta_j1.valor, carta_j2.valor):
-                resultado, acumulado, jogadas1, jogadas2 = compararCartas(carta_j1, carta_j2, acumulado)
-                print(resultado)
+            try:
+                if cont % 2 == 0:
+                    jogador_1.receberCartas(baralho.retirarCarta())
+                else:
+                    jogador_2.receberCartas(baralho.retirarCarta())
+                cont += 1
+            except BaralhoVazioException:
+                break
+        Tela.limpar_tela()
+        input('Vamos começar. ENTER para continuar')
+        while True:
+            try:
+                Tela.limpar_tela()
+                print('#' * 5 + f' Rodada {rodada} ' + '#' * 5 + '\n')  # imprime o número de rodadas
                 print(
-                    f'As cartas acumuladas são: {acumulado}\nVamos continuar na mesma rodada, pegando novas cartas. Quem ganhar, leva todas!')
-                input("Aperte ENTER para continuar")
+                    f'{jogador_1} tem {jogador_1.numeroCartas} cartas.')  # imprime a quantidade de cartas que o jogador 1 tem
+                print(
+                    f'{jogador_2} tem {jogador_2.numeroCartas} cartas.\n')  # imprime a quantidade de cartas que o jogador 2 tem
+                carta_j1 = jogador_1.retiraCarta()  # retira a carta da vez da batalha para o jogador 1
+                carta_j2 = jogador_2.retiraCarta()  # retira a carta da vez da batalha para o jogador 2
+                print((f'Carta de {jogador_1}: {carta_j1}'),
+                      (f'Carta de {jogador_2}: {carta_j2}'), sep='\n')
+                if carta_j1.valor == carta_j2.valor:  # verifica se as cartas possuem o mesmo valor
+                    print('\nCartas Empatadas, Vamos à rodada desempate!')
+                    # adicionando cartas acumuladas
+                    cartas_acumuladas.append(carta_j1)
+                    cartas_acumuladas.append(carta_j2)
+                elif carta_j1.valor > carta_j2.valor:  # verifica se a carta do jogador 1 possui um valor maior que a do jogador 2
+                    print(f'\n{jogador_1} é o vencedor')
+                    # pegar cartas do oponente
+                    while len(cartas_acumuladas) != 0:
+                        carta = cartas_acumuladas.pop()
+                        jogador_1.pegarCartaOponente(carta)
+                    jogador_1.pegarCartaOponente(carta_j1)
+                    jogador_1.pegarCartaOponente(carta_j2)
+                else:  # a carta do jogador 2 possui um valor maior que a do jogador 1
+                    print(f'\n{jogador_2} é o vencedor')
+                    # pegar cartas do oponente
+                    while len(cartas_acumuladas) != 0:
+                        carta = cartas_acumuladas.pop()
+                        jogador_2.pegarCartaOponente(carta)
+                    jogador_2.pegarCartaOponente(carta_j1)
+                    jogador_2.pegarCartaOponente(carta_j2)
 
-                if verificarOponenteCampeao(jogador_2):
-                    print(
-                        f'Acabou o jogo! {jogador_1.nome} ganhou, pois o {jogador_2.nome} não possui mais cartas depois desse empate.')
-                    break
-                elif verificarOponenteCampeao(jogador_2) is False:
-                    for carta in jogador_1.cartas_acumuladas:
-                        jogador_1.cartas.empilha(carta)
-                        jogador_1.cartas_acumuladas.pop(0)
+                input('\n\rENTER para continuar.')
+                # verifica se chegou o momento do fim da partida
+                if rodada_fim is not None:
+                    if rodada_fim <= rodada:
+                        raise RodadaFimException
+                rodada += 1
+            except RodadaFimException:
+                # verifica se no fim das rodadas previstas deu empate
+                if jogador_1.numeroCartas == jogador_2.numeroCartas:
+                    print('Os jogadores tem a mesma quantidade de cartas, vamos a uma rodada desempate!')
+                    input('\rENTER para continuar.')
+                    rodada += 1
+                    continue
+                print('\nFim de Partida!')
+                # printa quem ganhou o jogo
+                if jogador_1.numeroCartas > jogador_2.numeroCartas:
+                    print(f'{jogador_1} vence a partida com {jogador_1.numeroCartas} cartas!')
+                else:
+                    print(f'{jogador_2} vence a partida com {jogador_2.numeroCartas} cartas!')
 
-                if verificarOponenteCampeao(jogador_1):
-                    print(
-                        f'Acabou o jogo! {jogador_2.nome} ganhou, pois o {jogador_1.nome} não possui mais cartas depois desse empate.')
-                    break
-                elif verificarOponenteCampeao(jogador_2) is False:
-                    for carta in jogador_1.cartas_acumuladas:
-                        jogador_1.cartas.empilha(carta)
-                        jogador_1.cartas_acumuladas.pop(0)
-
-                carta_j1 = jogador_1.retiraCarta()
-                carta_j2 = jogador_2.retiraCarta()
-                print(f'\nA carta de {jogador_1.nome} é: {carta_j1}\nA carta de {jogador_2.nome} é: {carta_j2}')
-
-            resultado, acumulado, jogadas1, jogadas2 = compararCartas(carta_j1, carta_j2, acumulado)
-
-            if jogadas1 == "perdeu":
-                for lista in jogadas2:
-                    jogador_2.pegarCartaOponente(lista)
-                print(f'{jogador_1.nome} perdeu a rodada {rodada}')
-            if jogadas2 == "perdeu":
-                for lista in jogadas1:
-                    jogador_1.pegarCartaOponente(lista)
-                print(f'{jogador_2.nome} perdeu a rodada {rodada}')
-            print(
-                f'{jogador_1.nome} possui {jogador_1.quantificarCartas()} cartas e {jogador_2.nome} possui {jogador_2.quantificarCartas()} cartas!')
-            if verificarOponenteCampeao(jogador_2):
-                print(f'Fim do jogo. O {jogador_1.nome} venceu o jogo')
                 break
-            elif verificarOponenteCampeao(jogador_2) is False:
-                for carta in jogador_1.cartas_acumuladas:
-                    jogador_1.cartas.empilha(carta)
-                    jogador_1.cartas_acumuladas.pop(0)
-            elif verificarOponenteCampeao(jogador_1):
-                print(f'Fim do jogo. O {jogador_2.nome} venceu o jogo')
+            except JogadorSemCartasException:
+                if jogador_1.numeroCartas == 0:
+                    print(f'{jogador_2} vence a partida com {jogador_2.numeroCartas} cartas')
+                else:
+                    print(f'{jogador_1} vence a partida com {jogador_2.numeroCartas} cartas')
+                input('ENTER para continuar')
                 break
-            elif verificarOponenteCampeao(jogador_2) is False:
-                for carta in jogador_1.cartas_acumuladas:
-                    jogador_1.cartas.empilha(carta)
-                    jogador_1.cartas_acumuladas.pop(0)
-            else:
-                if rodada >= rodada_fim:
+        Tela.limpar_tela()
+        novo_jogo = input(
+            'Novo jogo? [S para Sim; Qualquer outro valor é ignorado]: ').upper()  # recebe a confirmação se haverá um novo jogo ou não
+        if not novo_jogo == 'S':
+            exit()
 
-                    if jogador_1.quantificarCartas() > jogador_2.quantificarCartas():
-                        print(f'{jogador_1.nome} é o ganhador!')
-                        while novo_jogo != 'S' and novo_jogo != 'N':
-                            try:
-                                novo_jogo = input('Deseja jogar novamente? Valores Válidos: [S/N]').strip()[0]
-                            except IndexError:
-                                print('ERRO: informe um valor válido [S/N]')
-                            except KeyboardInterrupt:
-                                print('Leitura de dados interrompida pelo usuário')
-                        if novo_jogo.upper() == 'N':
-                            print('Até a próxima!')
-                            exit()
-                        else:
-                            rodada_fim = 0
-                            while confirma_troca_nome != 'S' and confirma_troca_nome != 'N':
-                                try:
-                                    confirma_troca_nome = input('Trocar nomes? [S/N]').strip()[0].upper()
-                                except IndexError:
-                                    print('ERRO: informe um valor válido [S/N]')
-                                except KeyboardInterrupt:
-                                    print('Leitura de dados interrompida pelo usuário')
-                            if confirma_troca_nome == 'S':
-                                trocar_nome = True
-                                break
-                            elif confirma_troca_nome == 'N':
-                                trocar_nome = False
-                                break
-                    elif jogador_1.quantificarCartas() < jogador_2.quantificarCartas():
-                        print(f'{jogador_2.nome} é o ganhador!')
-                        while novo_jogo != 'S' and novo_jogo != 'N':
-                            try:
-                                novo_jogo = input('Deseja jogar novamente? Valores Válidos: [S/N]').strip()[0]
-                            except IndexError:
-                                print('ERRO: informe um valor válido [S/N]')
-                            except KeyboardInterrupt:
-                                print('Leitura de dados interrompida pelo usuário')
-                        if novo_jogo.upper() == 'N':
-                            print('Até a próxima!')
-                            exit()
-                        else:
-                            rodada_fim = 0
-                            while confirma_troca_nome != 'S' and confirma_troca_nome != 'N':
-                                try:
-                                    confirma_troca_nome = input('Trocar nomes? Valores Válidos: [S/N]').strip()[
-                                        0].upper()
-                                except IndexError:
-                                    print('ERRO: informe um valor válido [S/N]')
-                                except KeyboardInterrupt:
-                                    print('Leitura de dados interrompida pelo usuário')
-                            if confirma_troca_nome == 'S':
-                                trocar_nome = True
-                                break
-                            elif confirma_troca_nome == 'N':
-                                trocar_nome = False
-                                break
-
-                    else:
-                        print('Empate na quantidade de cartas dos jogadores.\n\nAgora é a decisiva!!!')
-                print("\n##########################\nVamos para mais uma rodada!\n##########################")
-                input("Aperte ENTER para continuar")
-                limpar_tela()
-
-
-if __name__ == '__main__':
-    main()
+        trocar_nome = True if input(
+            'Trocar nomes? [S para Sim; Qualquer outro valor é ignorado]').upper() == 'S' else False  # recebe a confirmação se haverá a troca de nome dos jogadores
