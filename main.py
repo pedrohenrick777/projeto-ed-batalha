@@ -93,24 +93,31 @@ if __name__ == '__main__':
                 rodada += 1
             except RodadaFimException:
                 # verifica se no fim das rodadas previstas deu empate
+                Tela.limpar_tela()
                 if jogador_1.numeroCartas == jogador_2.numeroCartas:
-                    print('Os jogadores tem a mesma quantidade de cartas, vamos a uma rodada desempate!')
+                    print('Chegamos a rodada final, mas os jogadores tem a mesma quantidade de cartas, vamos a uma rodada desempate!')
                     input('\rENTER para continuar.')
                     rodada += 1
                     continue
-                print('\nFim de Partida!')
+                print('Fim de Partida!\n')
                 # printa quem ganhou o jogo
                 if jogador_1.numeroCartas > jogador_2.numeroCartas:
                     print(f'{jogador_1} vence a partida com {jogador_1.numeroCartas} cartas!')
+                    print(f'{jogador_2} ficou com {jogador_2.numeroCartas} cartas!')
                 else:
                     print(f'{jogador_2} vence a partida com {jogador_2.numeroCartas} cartas!')
-
+                    print(f'{jogador_1} ficou com {jogador_1.numeroCartas} cartas!')
+                input('ENTER para continuar')
                 break
             except JogadorSemCartasException:
+                Tela.limpar_tela()
+                print('Jogador sem Cartas!\n')
                 if jogador_1.numeroCartas == 0:
                     print(f'{jogador_2} vence a partida com {jogador_2.numeroCartas} cartas')
+                    print(f'{jogador_1} ficou com {jogador_1.numeroCartas} cartas!')
                 else:
-                    print(f'{jogador_1} vence a partida com {jogador_2.numeroCartas} cartas')
+                    print(f'{jogador_1} vence a partida com {jogador_1.numeroCartas} cartas')
+                    print(f'{jogador_2} ficou com {jogador_2.numeroCartas} cartas!')
                 input('ENTER para continuar')
                 break
         Tela.limpar_tela()
